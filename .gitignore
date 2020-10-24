@@ -2,3 +2,4 @@
 /api/nestjs-crud-api/node_modules
 node_modules
 logs/
+.vscode/

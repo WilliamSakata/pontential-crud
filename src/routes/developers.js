@@ -14,12 +14,12 @@ const DEVS = (app) => {
         })
         .catch((error) => {
           logger.error('Erro ao consultar os devs' + error)
-          res.status(400).send(error)
+          res.status(404).send(error)
         })
 
     } catch (error) {
       logger.error('Erro ao consultar os devs' + error)
-      res.send(400).send(error)
+      res.send(404).send(error)
     }
   })
 
@@ -31,11 +31,26 @@ const DEVS = (app) => {
         })
         .catch((error) => {
           logger.error(`GET BY NAME ROUTES ${error}`)
-          res.status(400).send(error)
+          res.status(404).send(error)
         })
     } catch (error) {
       logger.error(`GET BY NAME ROUTES ${error}`)
-      res.status(400).send(error)
+      res.status(404).send(error)
+    }
+  })
+
+  app.get('/developers/id/:id', (req, res) => {
+    try {
+      controllerDEV.GetByID(req.params.id)
+        .then((result) => {
+          res.status(200).send(result)
+        })
+        .catch((error) => {
+          logger.error(`GET BY ID ROUTES ${error}`)
+          res.status(404).send(error)
+        })
+    } catch (error) {
+      res.status(404).send(error)
     }
   })
 
@@ -47,11 +62,11 @@ const DEVS = (app) => {
         })
         .catch((error) => {
           logger.error(`GET BY AGE ROUTES ${error}`)
-          res.status(400).send(`${error}`)
+          res.status(404).send(`${error}`)
         })
     } catch (error) {
       logger.error(`GET BY AGE ROUTES ${error}`)
-      res.status(400).send(`${error}`)
+      res.status(404).send(`${error}`)
     }
   })
 
@@ -63,27 +78,27 @@ const DEVS = (app) => {
         })
         .catch((error) => {
           logger.error(`CREATE USER ${error}`)
-          res.status(400).send(error)
+          res.status(404).send(error)
         })
     } catch (error) {
       logger.error(`CREATE USER ${error}`)
-      res.status(400).send(error)
+      res.status(404).send(error)
     }
   })
 
-  app.put('/developers', async (req, res) => {
+  app.put('/developers/:id', async (req, res) => {
     try {
-      controllerDEV.Update(req.body)
+      controllerDEV.Update(req.params.id, req.body)
         .then((result) => {
-          res.status(200).send(`Usuário atualizado com sucesso`)
+          res.status(200).send(`DEV atualizado com sucesso`)
         })
         .catch((error) => {
           logger.error(`UPDATE DEV ${error}`)
-          res.status(400).send(error.message)
+          res.status(404).send(error.message)
         })
     } catch (error) {
       logger.error(`UPDATE USER ${error}`)
-      res.status(400).send(error.message)
+      res.status(404).send(error.message)
     }
   })
 
@@ -95,11 +110,11 @@ const DEVS = (app) => {
         })
         .catch((error) => {
           logger.error(`DELETE DEV ${error}`)
-          res.status(400).send(error.message)
+          res.status(404).send(error.message)
         })
     } catch (error) {
       logger.error(`DELETE DEV ${error}`)
-      res.status(400).send(error.message)
+      res.status(404).send(error.message)
     }
   })
 
@@ -111,34 +126,28 @@ const DEVS = (app) => {
         })
         .catch((error) => {
           logger.error(`DELETE DEV ${error}`)
-          res.status(400).send(error.message)
+          res.status(404).send(error.message)
         })
     } catch (error) {
       logger.error(`DELETE DEV ${error}`)
-      res.status(400).send(error.message)
+      res.status(404).send(error.message)
     }
   })
 
-  app.get('/test', async (req, res) => {
+  app.delete('/developers/id/:id', async (req, res) => {
     try {
-      res.status(200).send(lastID)
-
+      controllerDEV.DeleteByID(req.params.id)
+        .then((result) => {
+          res.status(200).send(result)
+        })
+        .catch((error) => {
+          logger.error(`DELETE DEV ${error}`)
+          res.status(404).send(error)
+        })
     } catch (error) {
-      console.log(error)
-      res.status(500).send(error)
+      logger.error(`DELETE DEV ${error}`)
+      res.status(404).send(error)
     }
-  })
-
-  app.get('/delete', async (req, res) => {
-    let sql = `DROP TABLE DEVELOPERS`
-    db.all(sql, (err, rows) => {
-      if (err) {
-        logger.error(`DELETE ROUTES ${err}`)
-        res.status(400).send(err)
-      } else {
-        res.sendStatus(200)
-      }
-    })
   })
 }
 

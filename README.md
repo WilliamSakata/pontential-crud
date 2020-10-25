@@ -1,70 +1,67 @@
-# pontential-crud
-Potencial para um crud
+# API CRUD
 
+## Descrição
 
-# Objetivo do teste
-Desenvolver uma API JSON REST na *linguagem a sua escolha*, que utilize os métodos (​GET​, ​POST​, ​PUT​,
-DELETE​).
+Este repositório contém uma API em NodeJS se comunicando com um banco de dados SQLite. Essa API possui as funcionalidades de CRUD para a tabela Developers
 
-# Especificação
-Monte uma base de desenvolvedores com a seguinte estrutura:
+## Índice de conteúdos
+<!--ts-->
+   * [Descrição](#descrição)
+   * [Pré-Requesitos](#pré-requisitos)
+   * [Features](#features)
+   * [Funcionamento](#funcionamento)
+   * [Testes](#testes)
+<!--te-->
 
-```
-nome: varchar
-sexo: char
-idade: integer
-hobby: varchar
-datanascimento: date
-```
+## Pré-requisitos
+É necessário instalar o [Docker](https://www.docker.com/products/docker-desktop) na sua máquina 
 
-Utilize o ​banco de dados​ de sua preferência para armazenar os dados que a API irá
-consumir.
+## Features
 
-# API endpoints
+Essa API possui as seguintes funcionalidades:
+  * Cadastrar desenvolvedores
+  * Listar os desenvolvedores já cadastrados
+    * Por nome
+    * Por Idade
+    * Todos
+  * Atualizar os campos de um desenvolvedor já cadastrado
+  * Remover desenvolvedor(es) já cadastrado(s)
+    * Por idade
+    * Por nome
+    * Por ID
 
-```
-GET /developers
-Codes 200
-```
-Retorna todos os desenvolvedores
+Esse repositório também conta com um arquivo de log adaptado para simplificar o log da aplicação. 
 
-```
-GET /developers?
-Codes 200 / 404
-```
-Retorna os desenvolvedores de acordo com o termo passado via querystring e
-paginação
+Também foram feitos testes unitários para os endpoints da API.
 
-```
-GET /developers/{id}
-Codes 200 / 404
-```
-Retorna os dados de um desenvolvedor
+## Funcionamento
+
+Para criar o *container* rode o seguinte comando: 
 
 ```
-POST /developers
-Codes 201 / 400
+docker build -f app.dockerfile -t willsakata/dockerapi . 
 ```
-Adiciona um novo desenvolvedor
 
-```
-PUT /developers/{id}
-Codes 200 / 400
-```
-Atualiza os dados de um desenvolvedor
+E para rodar o *container* execute o seguinte comando: 
 
 ```
-DELETE /developers/{id}
-Codes 204 / 400
+docker run -p 3000:3000 -d --name apicrud willsakata/dockerapi
 ```
-Apaga o registro de um desenvolvedor
 
-# DIFERENCIAL PARA VAGA SENIOR -  Frontend
-UI/UX fica a critério do desenvolvedor porém deverá ser SPA (single-page
-application) e atender o consumo de todos endpoints da API 
+> Obs: caso a porta 3000 esteja ocupada, substitua por uma porta alternativa: porta_alternativa:3000
 
-# Entrega
-A aplicação deve rodar em docker, possuir um script para geração das tabelas no banco de dados e TESTES UNITÁRIOS.
+Feito isso a API estará online na porta escolhida e será possível fazer as requisições usando o Insomnia, Postman, etc.
 
-Após finalizado o link do projeto, por e-mail, no github com explicação no README
+Caso queira parar o container execute os seguintes comandos: 
+```
+docker stop apicrud
+docker rm apicrud
+```
 
+## Testes
+
+Os testes foram feitos utilizando o Jest e o Supertest para testar os endpoints da API. Os testes serão executados sempre que o container for executado, porém pode-se executar os testes sempre que desejar, basta ter o NodeJs instalado, basta executar o comando: 
+
+```
+npm test
+```

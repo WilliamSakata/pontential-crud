@@ -17,10 +17,25 @@ class DevModel {
     })
   }
 
+  listByID(id) {
+    return new Promise((resolve, reject) => {
+      let sql = `SELECT * FROM DEVELOPERS WHERE ID = ${id}`
+
+      db.all(sql, (error, rows) => {
+        if (error) {
+          logger.error(`Ocorreu um erro ao selecionar o dev ${error}`)
+          reject(error)
+        } else {
+          resolve(rows)
+        }
+      })
+    })
+  }
+
   listAll() {
     return new Promise((resolve, reject) => {
 
-      let sql = `SELECT * FROM DEVELOPERS`
+      let sql = `SELECT ID, NOME FROM DEVELOPERS`
 
       db.all(sql, (error, rows) => {
         if (error) {
@@ -36,7 +51,7 @@ class DevModel {
   listByName(nome) {
     return new Promise((resolve, reject) => {
 
-      let sql = `SELECT * FROM DEVELOPERS WHERE NOME = '${nome}'`
+      let sql = `SELECT ID, NOME FROM DEVELOPERS WHERE NOME LIKE '%${nome}%'`
 
       db.all(sql, (error, rows) => {
         if (error) {
@@ -52,7 +67,7 @@ class DevModel {
 
   listByAge(idade) {
     return new Promise((resolve, reject) => {
-      let sql = `SELECT * FROM DEVELOPERS WHERE IDADE = ${idade}`
+      let sql = `SELECT ID, NOME FROM DEVELOPERS WHERE IDADE = ${idade}`
 
       db.all(sql, (error, rows) => {
         if (error) {
@@ -96,6 +111,21 @@ class DevModel {
     })
   }
 
+  deleteByID(id) {
+    return new Promise((resolve, reject) => {
+      let sql = `DELETE FROM DEVELOPERS WHERE ID = ${id}`
+
+      db.run(sql, (error, rows) => {
+        if (error) {
+          logger.error(error)
+          reject(error)
+        } else {
+          resolve('Dev deletado com sucesso')
+        }
+      })
+    })
+  }
+
   exists(nome) {
     return new Promise((resolve, reject) => {
       let sql = `SELECT COUNT(*) as COUNT FROM DEVELOPERS WHERE NOME = '${nome}'`
@@ -126,6 +156,21 @@ class DevModel {
     })
   }
 
+  existsByID(id) {
+    return new Promise((resolve, reject) => {
+      let sql = `SELECT COUNT(*) AS COUNT FROM DEVELOPERS WHERE ID = ${id}`
+
+      db.all(sql, (error, rows) => {
+        if (error) {
+          logger.error(error)
+          reject(error)
+        } else {
+          resolve(rows[0].COUNT)
+        }
+      })
+    })
+  }
+
   update(sqlDev) {
     return new Promise((resolve, reject) => {
       let sql = `UPDATE DEVELOPERS set 
@@ -134,7 +179,7 @@ class DevModel {
                   IDADE = ?,
                   DATA_NASCIMENTO = ?,
                   HOBBY = ? 
-                  WHERE NOME = ?`
+                  WHERE ID = ?`
       db.run(sql, sqlDev, (error, result) => {
         if (error) {
           logger.error(error)
